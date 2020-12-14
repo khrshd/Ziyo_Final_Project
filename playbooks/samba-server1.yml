@@ -1,0 +1,66 @@
+---
+- hosts: samba
+  become: yes
+  remote_user: ansible
+  become_method: sudo
+  vars:
+   users:
+    - name: sambaadmin
+      passwd: smbpassword
+  tasks:
+   - name: Install
+     yum:
+      name:
+       - samba
+       - samba-common
+       - samba-client
+      state: present
+
+   - name: manage config file
+     template:
+       src: /ansible/templates/smb.conf.j2
+       dest: /etc/samba/smb.conf
+
+   - name: mkdir -p
+     file:
+      path: /sambashare
+      state: directory
+      recurse: yes
+      owner: ansible
+      group: ansible
+      mode: 0777
+   - name: mkdir
+     file:
+      path: /sambashare/secure
+      state: directory
+      recurse: yes
+      owner: ansible
+      group: ansible
+      mode: 0777
+   - name: mkdir
+     file:
+      path: /sambashare/open
+      state: directory
+      recurse: yes
+      owner: ansible
+      group: ansible
+      mode: 0777
+
+   - name: Create user
+     user:
+       name: sambaadmin
+   - name: samba passwd
+     shell: "printf '{{ item.passwd }}\n{{ item.passwd }}\n' | smbpasswd -a {{ item.name }}"
+     with_items:
+     - "{{ users }}"
+   - name: start the service
+     service:
+       name: smb
+       state: started
+       enabled: yes
+   - name: start the service
+     service:
+       name: nmb
+       state: started
+       enabled: yes
+

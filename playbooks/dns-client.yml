@@ -1,0 +1,21 @@
+---
+- name: set up dns client
+  hosts: dns-client
+  remote_user: ansible
+  become: yes
+
+  tasks:
+  - name: install packages
+    yum:
+      name: ['bind', 'bind-utils']
+      state: latest
+
+  - name: /etc/resolv.conf
+    shell: |
+       cat > /etc/resolv.conf <<EOF
+       search ziyotek4.local
+       nameserver 192.168.38.12
+       nameserver 192.168.38.13
+       nameserver 192.168.38.14
+
+

@@ -1,0 +1,64 @@
+---
+- name: Install lamp stack
+  hosts: db6
+  become: true
+
+  tasks:
+  - name: install lamp stack
+    become: yes
+    yum:
+      name:
+        - httpd
+        - httpd-devel
+        - mysql
+        - mysql-server
+        - mysql-devel
+        - php
+        - php-devel
+        - php-mysql
+      state: present
+
+  - name: create my php file
+    copy:
+      src: /ansible/templates/my.php
+      dest: /var/www/html/my.php
+    notify: restart httpd
+
+  - name: phpmyadmin config sourcing
+    copy:
+      src: /ansible/templates/phpmyadmin.conf
+      dest: /etc/httpd/conf.d/phpMyAdmin.conf
+    notify: restart_httpd
+
+
+  - name: start services
+    service: name={{ item }} state=restarted enabled=yes
+    become: yes
+    with_items:
+      - httpd
+      - mysqld
+
+  - name: deploy index.html
+    become: yes
+    copy: src=/etc/ansible/content/lamp/index.html dest=/var/www/html/index.html
+    notify: restart_httpd
+
+  handlers:
+    - name: start_service
+      service:
+        name: mysql
+        state: restart
+
+    - name: restart httpd
+      systemd:
+        name: httpd
+        state: restart
+        daemon_reload: yes
+
+    - name: set_password
+      mysql_user:
+        name: root
+        password: password123
+        priv: '*,*:ALL,GRANT'
+        state: present
+

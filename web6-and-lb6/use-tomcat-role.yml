@@ -1,0 +1,7 @@
+---
+- name: use pescobar.tomcat for playbook
+  hosts: webserver6
+  become: yes
+  roles:
+    -  pescobar.tomcat 
+

@@ -1,0 +1,35 @@
+---
+- hosts: samba-client
+
+  become: yes
+  remote_user: ansible
+  vars:
+   - users:
+      - name: sambaadmin
+        passwd: smbpassword
+  tasks:
+   - name: Install
+     yum:
+      name:
+       - samba-client
+       - cifs-utils
+      state: present
+   - name: smbclient
+     shell: "printf '{{ item.passwd }}\n' | smbclient -U {{ item.name }} -L 192.168.38.18"
+     with_items:
+     - "{{ users }}"
+   - name: mkdir
+     file:
+      path: /client
+      state: directory
+      mode: 777
+      owner: ansible
+      group: ansible
+   - name: mount
+     mount:
+      path: /client
+      src: //192.168.38.18/sambashare/secure
+      opts: user=sambaadmin,password=smbpassword
+      fstype: cifs
+      state: mounted
+

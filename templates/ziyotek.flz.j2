@@ -1,0 +1,62 @@
+$TTL    1D
+@       IN      SOA     prdx-test401.ziyotek4.local. root.prdx-test401.ziyotek4.local. (
+                        19              ; Serial
+                        1D              ; Refresh
+                        1H              ; Retry
+                        1W              ; Expire
+                        3H )            ; minimum
+
+; name servers NS records
+            IN      NS      prdx-test401.ziyotek4.local.
+            IN      NS      prdx-nsw401.ziyotek4.local.
+	    IN	    NS	    prdx-nsw402.ziyotek4.local.
+
+; name servers A records
+prdx-nsm401  IN      A       192.168.38.99
+prdx-nsw401  IN      A       192.168.38.13
+prdx-nsw402  IN      A       192.168.38.14
+
+; mail server MX records
+
+        IN      MX      19      prdx-mail401.ziyotek4.local.
+
+; mail server MX records
+
+        IN      MX      51      prdx-mail402.ziyotek4.local.
+
+
+
+; servers
+prdx-ntp401          IN      A   192.168.38.10
+prdx-ntp402          IN      A   192.168.38.11
+master-dns           IN      CNAME   prdx-test401.ziyotek4.local.
+slave-dns            IN      CNAME   prdx-nsw401.ziyotek4.local.
+slave-dns2           IN      CNAME   prdx-nsw402.ziyotek4.local.
+prdx-ftp401	     IN	     A   192.168.38.16
+prdx-pxe401	     IN	     A	 192.168.38.15
+prdx-nfs401	     IN	     A	 192.168.38.17
+prdx-samba401	     IN      A	 192.168.38.18
+prdx-db461	     IN	     A   192.168.38.20
+prdx-db471	     IN	     A   192.168.38.21
+prdx-web461	     IN	     A 	 192.168.38.22
+prdx-web471	     IN	     A 	 192.168.38.23
+prdx-web462	     IN	     A	 192.168.38.24
+prdx-web472	     IN	     A	 192.168.38.25
+prdx-web463	     IN	     A	 192.168.38.26
+prdx-web473	     IN	     A 	 192.168.38.27
+prdx-lb461	     IN	     A   192.168.38.28
+prdx-lb471	     IN	     A	 192.168.38.29
+prdx-nagios401	     IN	     A	 192.168.38.30
+prdx-ldap401	     IN	     A   192.168.38.31
+prdx-ansible401	     IN	     A   192.168.38.32
+prdx-dockm401	     IN	     A	 192.168.38.37
+prdx-dockw401	     IN	     A	 192.168.38.38
+prdx-dockw402	     IN	     A   192.168.38.39
+prdx-jenkins401	     IN	     A	 192.168.38.40
+prdx-kubem401	     IN	     A	 192.168.38.41
+prdx-kubew401	     IN	     A	 192.168.38.42
+prdx-kubew402	     IN	     A   192.168.38.43
+prdx-nagios402	     IN	     A   192.168.38.50
+prdx-mail401	     IN	     A   192.168.38.19
+prdx-mail402	     IN	     A   192.168.38.51
+

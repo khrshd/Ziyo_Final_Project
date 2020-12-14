@@ -1,0 +1,47 @@
+---
+- name: Set up dns master
+  hosts: sitora
+  remote_user: ansible
+  become: yes
+
+  tasks:
+  - name: install packages
+    yum:
+      name: ['bind', 'bind-utils']
+      state: latest
+
+  - name: start named
+    service:
+      name: named
+      state: started
+      enabled: yes
+
+  - name: configure dns master
+    template:
+      src: /ansible/templates/dns.master.j2
+      dest: /etc/named.conf
+    notify:
+      - restart named
+
+
+  - name: copying FLZ file
+    template:
+      src: /ansible/templates/ziyotek.flz.j2
+      dest: /var/named/ziyotek4.flz
+    notify:
+      - restart named
+
+  - name: copying RLZ file
+    template:
+      src: /ansible/templates/ziyotek.rlz.j2
+      dest: /var/named/ziyotek4.rlz
+    notify:
+      - restart named
+
+  handlers:
+    - name: restart named
+      service:
+        name: named
+        state: restarted
+
+

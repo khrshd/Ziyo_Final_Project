@@ -1,0 +1,8 @@
+---
+- name:  use mrlesmithjr.samba role
+  hosts: test40
+  user: ansible
+  become: true
+  roles:
+  -  mrlesmithjr.samba
+

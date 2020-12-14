@@ -1,0 +1,31 @@
+---
+- name: Set up dns slave
+  hosts: dnss
+  remote_user: ansible
+  become: yes
+
+  tasks:
+  - name: install packages
+    yum:
+      name: ['bind', 'bind-utils']
+      state: latest
+
+
+  - name: start named
+    service:
+      name: named
+      state: started
+      enabled: yes
+
+  - name: configure dns slave
+    template:
+      src: /ansible/templates/dns.slave.j2
+      dest: /etc/named.conf
+    notify: restart named
+
+  handlers:
+    - name: restart named
+      service:
+        name: named
+        state: restarted
+
